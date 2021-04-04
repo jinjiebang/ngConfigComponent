@@ -61,6 +61,31 @@ export class WelcomeComponent implements OnInit {
           },
           validators: [Validators.required],
           controlType: 'control',
+        },
+        {
+          label: 'key5',
+          key: 'key5',
+          value: 1,
+          rowIndex: 0,
+          type: 'select',
+          span: 12,
+          offset: 0,
+          layout: [4, 20],
+          options: [
+            {
+              label: '1',
+              value: 1
+            },
+            {
+              label: '2',
+              value: 2
+            }
+          ],
+          onChange: (value, form, formConfig, updateForm) => {
+             form.get('key3')?.setValue(1);
+          },
+          validators: [Validators.required],
+          controlType: 'control',
         }
       ]
     },

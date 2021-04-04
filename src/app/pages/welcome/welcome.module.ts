@@ -12,10 +12,11 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule} from 'ng-zorro-antd/select';
 import { ConfigFormItemComponent } from 'src/app/components/config-form-item/config-form-item.component';
+import { LayoutPipe } from 'src/app/components/config-form/layout.pipe';
 
 @NgModule({
   imports: [WelcomeRoutingModule, CommonModule, NzGridModule, FormsModule, ReactiveFormsModule, NzFormModule, NzInputModule, NzSelectModule],
-  declarations: [WelcomeComponent, ConfigFormComponent, ConfigFormItemComponent],
+  declarations: [WelcomeComponent, ConfigFormComponent, ConfigFormItemComponent, LayoutPipe],
   exports: [WelcomeComponent]
 })
 export class WelcomeModule { }

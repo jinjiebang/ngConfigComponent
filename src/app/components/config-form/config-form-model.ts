@@ -22,4 +22,5 @@ export interface IControlConfig {
   children?: IControlConfig[];
   control?: FormControl | FormGroup | FormArray;
   options?: IOption[];
+  index?: any;
 }

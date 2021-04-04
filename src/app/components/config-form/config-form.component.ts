@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, Output, SimpleChanges } from
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { IControlConfig } from './config-form-model';
 import { Subscription } from 'rxjs';
+import * as _ from "lodash";
 
 @Component({
   selector: 'app-config-form',
@@ -12,7 +13,6 @@ export class ConfigFormComponent implements OnDestroy {
   @Input() formConfig: IControlConfig[] = [];
   @Input() rowGutter: number = 0;
   @Output() formChange = new EventEmitter<FormGroup>()
-  public layoutConfig: IControlConfig[][] = [];
   public form: FormGroup;
   public isChangeMap: Map<string, boolean> = new Map();
   private onChange = () => { };
@@ -47,7 +47,6 @@ export class ConfigFormComponent implements OnDestroy {
   private initForm(): void {
     this.buildForm();
     this.initControlConfig();
-    this.initLayoutConfig();
   }
 
   private buildForm(): void {
@@ -104,16 +103,9 @@ export class ConfigFormComponent implements OnDestroy {
     }
   }
 
-  private initLayoutConfig() {
-    this.layoutConfig = [];
-    for (const control of this.formConfig) {
-      this.layoutConfig[control.rowIndex] = this.layoutConfig[control.rowIndex] || [];
-      this.layoutConfig[control.rowIndex].push(control)
-    }
-  }
-
   private resetConfig() {
     this.isChangeMap.clear();
+    this.formConfig = _.cloneDeep(this.formConfig);
     this.clearSubsribe();
     this.initForm();
   }
