@@ -14,7 +14,7 @@ export class ConfigFormComponent implements OnDestroy {
   @Input() rowGutter: number = 0;
   @Output() formChange = new EventEmitter<FormGroup>()
   public form: FormGroup;
-  public isChangeMap: Map<string, boolean> = new Map();
+  private isChangeMap: Map<string, boolean> = new Map();
   private onChange = () => { };
   private subscriptionList: Subscription[] = [];
   constructor(public fb: FormBuilder) {

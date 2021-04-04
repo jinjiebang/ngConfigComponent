@@ -8,8 +8,8 @@ import { IControlConfig } from './config-form-model';
 export class LayoutPipe implements PipeTransform {
 
   transform(configArr: IControlConfig[], args?: any): IControlConfig[][] {
-    let layoutConfig:IControlConfig[][] = [];
-    for (let i =0;i<configArr.length;i++) {
+    let layoutConfig: IControlConfig[][] = [];
+    for (let i = 0; i < configArr.length; i++) {
       const control = configArr[i];
       layoutConfig[control.rowIndex] = layoutConfig[control.rowIndex] || [];
       layoutConfig[control.rowIndex].push(control)
