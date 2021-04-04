@@ -1,0 +1,31 @@
+<form nz-form [formGroup]="form">
+  <ng-container *ngFor="let row of layoutConfig">
+    <div nz-row [nzGutter]="rowGutter">
+      <ng-container *ngFor="let controlConfig of row">
+        <div nz-col [nzSpan]="controlConfig.span" [nzOffset]="controlConfig.offset">
+          <ng-container *ngIf="controlConfig.controlType == 'control'">
+            <app-config-form-item [formControlName]="controlConfig.key" [config]="controlConfig"></app-config-form-item>
+          </ng-container>
+          <ng-container *ngIf="controlConfig.controlType == 'group'">
+            <div [formGroupName]='controlConfig.key'>
+              <ng-container *ngIf='controlConfig.children'>
+                <ng-container *ngFor="let childConfig of controlConfig.children">
+                  <app-config-form-item [formControlName]="childConfig.key" [config]="childConfig"></app-config-form-item>
+                </ng-container>
+              </ng-container>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="controlConfig.controlType == 'array'">
+            <div [formArrayName]='controlConfig.key'>
+              <ng-container *ngIf='controlConfig.children'>
+                <ng-container *ngFor="let childConfig of controlConfig.children;let name=index">
+                  <app-config-form-item [formControlName]="name" [config]="childConfig"></app-config-form-item>
+                </ng-container>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</form>
