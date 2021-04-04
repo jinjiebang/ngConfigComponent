@@ -128,7 +128,7 @@ export class ConfigFormComponent implements OnDestroy {
   private initOnChange(config: IControlConfig) {
     if (config.control) {
       const control = config.control;
-      control.valueChanges.subscribe((value) => {
+      const subscription = control.valueChanges.subscribe((value) => {
         const isChange = this.isChangeMap.get(config.key);
         if (!isChange) {
           this.isChangeMap.set(config.key, true);
@@ -140,7 +140,8 @@ export class ConfigFormComponent implements OnDestroy {
             });
           }
         }
-      })
+      });
+      this.subscriptionList.push(subscription);
     }
     if (config.children) {
       for (let configItem of config.children) {
