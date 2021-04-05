@@ -1,4 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { NzModalComponent } from 'ng-zorro-antd/modal';
 
 export enum IModalType {
   ADD,
@@ -8,7 +9,7 @@ export type ConfirmData<R> = { type: IModalType, data: R }
 export interface ICustomModal<T, U, R> {
   onOpen: (data: U, type: IModalType) => void;
   initData: (data: T) => Promise<U>;
-  initModal: (configModal: IConfigModal<T, U, R>) => void;
+  initModal: (configModal: IConfigModal<T, U, R>, modalRef: NzModalComponent) => void;
   confirmData: ConfirmData<R>;
   configModal: IConfigModal<T, U, R>;
 }
@@ -19,7 +20,7 @@ export interface IConfigModal<T, U, R> {
   openModal: (data: T, type: IModalType) => void;
   confirm: (data: ConfirmData<R>) => void;
   cancel: () => void;
-  updateModalConfig: (config: ICustomModalConifg) => void
+  updateModalConfig: () => void
 }
 export interface ICustomModalConifg {
   customFooter?: boolean;
@@ -36,9 +37,9 @@ export class ConfigModalComponent<T, U, R> implements AfterViewInit, IConfigModa
   @Output() onConfirm = new EventEmitter<ConfirmData<R>>();
   @Output() onCancel = new EventEmitter<T>();
   @ViewChild("content", { read: ViewContainerRef }) private contentContainer!: ViewContainerRef;
+  @ViewChild(NzModalComponent) modalRef!: NzModalComponent;
   private customModal!: ICustomModal<T, U, R>;
   public visible: boolean = false;
-  public config: ICustomModalConifg = { okDisabled: false, customFooter: false };
   constructor(
     private factoryResolver: ComponentFactoryResolver,
     private cdr: ChangeDetectorRef,
@@ -47,7 +48,7 @@ export class ConfigModalComponent<T, U, R> implements AfterViewInit, IConfigModa
   ngAfterViewInit() {
     const factory = this.factoryResolver.resolveComponentFactory(this.customComponent);
     this.customModal = this.contentContainer.createComponent(factory).instance;
-    this.customModal.initModal(this);
+    this.customModal.initModal(this, this.modalRef);
   }
 
   public openModal(data: T, type: IModalType): void {
@@ -57,8 +58,7 @@ export class ConfigModalComponent<T, U, R> implements AfterViewInit, IConfigModa
       this.customModal.onOpen(newData, type)
     });
   }
-  public updateModalConfig(config: ICustomModalConifg) {
-    this.config = { ...this.config, ...config };
+  public updateModalConfig() {
     this.cdr.detectChanges();
   }
   public onOK() {

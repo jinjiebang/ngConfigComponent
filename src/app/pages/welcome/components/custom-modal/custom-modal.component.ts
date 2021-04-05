@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { NzModalComponent } from 'ng-zorro-antd/modal';
 import { ConfirmData, IConfigModal, ICustomModal, IModalType } from 'src/app/components/config-modal/config-modal.component';
 
 export type Modal = ICustomModal<string, number, number>
@@ -11,14 +12,17 @@ export type ConfigModal = IConfigModal<string, number, number>
 export class CustomModalComponent implements Modal {
   @Input() configModal!: ConfigModal;
   public customFooter: boolean = false;
-  public okDisabled: boolean = false;
+  public okDisabled: boolean = true
   public confirmData: ConfirmData<number> = {data:1,type:IModalType.ADD};
 
   constructor() { }
 
-  public initModal(configModal:ConfigModal) {
+  public initModal(configModal:ConfigModal, modalRef: NzModalComponent) {
     this.configModal = configModal;
-    this.configModal.updateModalConfig({okDisabled:this.okDisabled,customFooter:this.customFooter})
+    modalRef.nzOkDisabled = this.okDisabled;
+    modalRef.nzFooter = this.customFooter ? null : undefined;
+    this.configModal.updateModalConfig();
+
   }
 
   public initData(data: string): Promise<number> {
