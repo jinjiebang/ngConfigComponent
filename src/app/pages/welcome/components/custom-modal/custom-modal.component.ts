@@ -10,21 +10,21 @@ export type ConfigModal = IConfigModal<string, number, number>
   styleUrls: ['./custom-modal.component.scss']
 })
 export class CustomModalComponent implements Modal {
-  @Input() confirm!: (data: ConfirmData<number>) => void;
-  @Input() cancel!: () => void;
-  @Input() updateModalConfig!: () => void;
-  @Input() modalRef!: NzModalComponent
+  // @Input() confirm!: (data: ConfirmData<number>) => void;
+  // @Input() cancel!: () => void;
+  // @Input() updateModalConfig!: () => void;
+  // @Input() modalRef!: NzModalComponent
   public customFooter: boolean = false;
   public okDisabled: boolean = false;
   public _confirmData: ConfirmData<number> = { data: 1, type: IModalType.ADD };
 
   constructor() { }
 
-  public initModal = () => {
-    this.modalRef.nzOkDisabled = this.okDisabled;
-    this.modalRef.nzFooter = this.customFooter ? null : undefined;
-    this.updateModalConfig();
-  }
+  // public initModal = () => {
+    // this.modalRef.nzOkDisabled = this.okDisabled;
+    // this.modalRef.nzFooter = this.customFooter ? null : undefined;
+    // this.updateModalConfig();
+  // }
   public getConfirmData = () => {
     return this._confirmData;
   }
@@ -44,10 +44,10 @@ export class CustomModalComponent implements Modal {
   };
 
   public onConfirm() {
-    this.confirm(this._confirmData)
+    // this.confirm(this._confirmData)
   }
   public onCancel() {
-    this.cancel();
+    // this.cancel();
   }
 
 

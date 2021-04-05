@@ -145,11 +145,11 @@ export class WelcomeComponent implements OnInit {
   ngOnInit() {
   }
   showModal(){
-    this.configModal.openModal('iii',IModalType.ADD)
+    this.configModal.openModal('父组件数据',IModalType.ADD)
   }
 
   public onConfirm(confirm: ConfirmData<number>) {
-    console.log('confirmData', confirm)
+    console.log('子组件confirm数据', confirm)
   }
   public onCancel() {
 

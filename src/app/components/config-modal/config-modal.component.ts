@@ -7,15 +7,15 @@ export enum IModalType {
 }
 export type ConfirmData<R> = { type: IModalType, data: R }
 export interface ICustomModal<T, U, R> {
-  confirm: (data: ConfirmData<R>) => void;
-  cancel: () => void;
-  updateModalConfig: () => void;
-  modalRef: NzModalComponent;
+  confirm?: (data: ConfirmData<R>) => void;
+  cancel?: () => void;
+  updateModalConfig?: () => void;
+  modalRef?: NzModalComponent;
   // need component implement method
-  initData: (data: T) => Promise<U>;
-  onOpen: (data: U, type: IModalType) => void;
+  initData?: (data: T) => Promise<U>;
+  initModal?: () => void;
   getConfirmData: () => ConfirmData<R>;
-  initModal: () => void;
+  onOpen: (data: U, type: IModalType) => void;
 }
 export interface IConfigModal<T, U, R> {
   customComponent: Type<ICustomModal<T, U, R>>;
@@ -53,15 +53,19 @@ export class ConfigModalComponent<T, U, R> implements AfterViewInit, IConfigModa
     this.customModal.cancel = this.cancel;
     this.customModal.updateModalConfig = this.updateModalConfig;
     this.customModal.modalRef = this.modalRef;
-    this.customModal.initModal();
+    if (this.customModal.initModal) {
+      this.customModal.initModal();
+    }
   }
 
-  public openModal(data: T, type: IModalType): void {
-    this.customModal.initData(data).then((newData: U) => {
-      this.visible = true;
-      this.cdr.detectChanges();
-      this.customModal.onOpen(newData, type)
-    });
+  public async openModal(data: T, type: IModalType): Promise<void> {
+    let newData: T | U = data;
+    if (this.customModal.initData) {
+      newData = await this.customModal.initData(data);
+    }
+    this.visible = true;
+    this.cdr.detectChanges();
+    this.customModal.onOpen(newData as U, type)
   }
   public onOK() {
     this.confirm(this.customModal.getConfirmData());
