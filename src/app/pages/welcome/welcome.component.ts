@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { IControlConfig } from 'src/app/components/config-form/config-form-model';
-import { ConfigModalComponent, ConfirmData, IModalType } from 'src/app/components/config-modal/config-modal.component';
+import { ConfigModalComponent, ConfirmData, IModalConifg, IModalType } from 'src/app/components/config-modal/config-modal.component';
 import { CustomModalComponent } from './components/custom-modal/custom-modal.component';
 
 @Component({
@@ -138,7 +138,11 @@ export class WelcomeComponent implements OnInit {
     validators: [Validators.required, Validators.min(2)],
     controlType: 'control',
   }
-  public customModalComponent = CustomModalComponent;
+  public modalConfig: IModalConifg<string,string,number> = {
+    onConfirm:this.onConfirm.bind(this),
+    onCancel: this.onCancel.bind(this),
+    component:CustomModalComponent
+  }
   @ViewChild(ConfigModalComponent) configModal!: ConfigModalComponent<string,string,number>;
   constructor() { }
 

@@ -1,6 +1,6 @@
 <div>
   <app-config-form [formConfig]="formConfig"></app-config-form>
   <button nz-button (click)="showModal()">打开弹窗</button>
-  <app-config-modal (onCancel)="onCancel()" (onConfirm)="onConfirm($event)" [customComponent]="customModalComponent">
+  <app-config-modal [config]='modalConfig'>
   </app-config-modal>
 </div>
