@@ -2,14 +2,18 @@
   <nz-form-label [nzSpan]="config.layout[0]">{{config.label}}</nz-form-label>
   <nz-form-control [nzSpan]="config.layout[1]" nzDisableAutoTips [nzErrorTip]="errorTpl" [nzValidateStatus]="control">
     <ng-container [ngSwitch]="config.type">
-      <input nz-input *ngSwitchCase="'input'" placeholder="" [(ngModel)]="value" />
-      <nz-select *ngSwitchCase="'select'" nzAllowClear [(ngModel)]="value">
-        <nz-option *ngFor="let item of config.options" [nzLabel]="item.label" [nzValue]="item.value">
-        </nz-option>
-      </nz-select>
+      <ng-container *ngIf="config.props">
+        <input nz-input *ngSwitchCase="'input'" [placeholder]="config.props.placeholder" [(ngModel)]="value" />
+        <nz-select *ngSwitchCase="'select'" nzAllowClear [(ngModel)]="value">
+          <nz-option *ngFor="let item of config.props.options" [nzLabel]="item.label" [nzValue]="item.value">
+          </nz-option>
+        </nz-select>
+      </ng-container>
     </ng-container>
     <ng-template #errorTpl>
-      <span *ngFor="let error of this.showError(control)">{{error}}</span>
+      <ng-container *ngIf="control.errors">
+        <span *ngFor="let error of control | showErrors: config">{{error}}</span>
+      </ng-container>
     </ng-template>
   </nz-form-control>
 </nz-form-item>

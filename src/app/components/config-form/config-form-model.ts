@@ -21,6 +21,6 @@ export interface IControlConfig {
   onChange?: (value: IControlValue, form: FormGroup, formConfig: IControlConfig[], updateForm:()=>void) => void;
   children?: IControlConfig[];
   control?: FormControl | FormGroup | FormArray;
-  options?: IOption[];
+  props?: {[key:string]:any};
   index?: any;
 }

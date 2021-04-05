@@ -41,11 +41,6 @@ export class ConfigFormItemComponent implements OnInit, ControlValueAccessor {
     this.onTouchedFn = fn;
   }
 
-  public showError(control: FormControl) {
-    const config = this.config;
-    return config.showError ? config.showError(control, this.config) : []
-  }
-
   ngOnInit() {
   }
 

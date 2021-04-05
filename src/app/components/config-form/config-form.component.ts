@@ -30,20 +30,6 @@ export class ConfigFormComponent implements OnDestroy {
       this.initForm();
     }
   }
-  public showError = (control: FormControl, config: IControlConfig) => {
-    if (!control.dirty) return [];
-    if (control.errors === null) return [];
-    return Object.keys(control.errors).map(key => {
-      const error = control.errors ? control.errors[key] : { min: 0 };
-      if (key === 'required') {
-        return `请输入${config.label}`;
-      } else if (key === 'min') {
-        return `${config.label}最小长度是${error.min}`
-      } else {
-        return 'unkownn';
-      }
-    })
-  }
   private initForm(): void {
     this.buildForm();
     this.initControlConfig();
@@ -89,7 +75,6 @@ export class ConfigFormComponent implements OnDestroy {
 
   private initControlConfig() {
     const setConfig = (config: IControlConfig) => {
-      config.showError = config.showError || this.showError;
       config.onChange = config.onChange || this.onChange;
       if (config.children) {
         for (const child of config.children) {
