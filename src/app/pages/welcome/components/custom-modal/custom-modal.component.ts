@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
+import { NzModalComponent } from 'ng-zorro-antd/modal';
 import { ConfirmData, IConfigModal, ICustomModal, IModalType } from 'src/app/components/config-modal/config-modal.component';
 
-export type Modal = ICustomModal<string, string, number>
-export type ConfigModal = IConfigModal<string, string, number>
+export type Modal = ICustomModal<string, number, number>
+export type ConfigModal = IConfigModal<string, number, number>
 @Component({
   selector: 'app-custom-modal',
   templateUrl: './custom-modal.component.html',
@@ -28,17 +29,17 @@ export class CustomModalComponent implements Modal {
     return this._confirmData;
   }
 
-  public initData = (data: string): Promise<string> => {
+  public initData = (data: string): Promise<number> => {
     return new Promise((resolve, reject) => {
-      console.log('initData', data)
+      console.log('initData')
       setTimeout(() => {
         console.log('initData complete')
-        resolve('ddd');
+        resolve(0);
       }, 200)
     })
   }
 
-  public onOpen = (data: string, type: IModalType): void => {
+  public onOpen = (data: number, type: IModalType): void => {
     console.log('onOpen', data, type);
   };
 

@@ -18,13 +18,14 @@ export interface ICustomModal<T, U, R> {
   onOpen: (data: U, type: IModalType) => void;
 }
 export interface IConfigModal<T, U, R> {
-  config: IModalConifg<T, U, R>;
+  customComponent: Type<ICustomModal<T, U, R>>;
+  onConfirm: EventEmitter<ConfirmData<R>>;
+  onCancel: EventEmitter<T>;
   openModal: (data: T, type: IModalType) => void;
 }
-export interface IModalConifg<T, U, R> {
-  onConfirm: (data: ConfirmData<R>) => void;
-  onCancel: () => void;
-  component: Type<ICustomModal<T, U, R>>
+export interface ICustomModalConifg {
+  customFooter?: boolean;
+  okDisabled?: boolean;
 }
 @Component({
   selector: 'app-config-modal',
@@ -33,7 +34,9 @@ export interface IModalConifg<T, U, R> {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConfigModalComponent<T, U, R> implements AfterViewInit, IConfigModal<T, U, R> {
-  @Input() public config!: IModalConifg<T, U, R>;
+  @Input() customComponent!: Type<ICustomModal<T, U, R>>
+  @Output() onConfirm = new EventEmitter<ConfirmData<R>>();
+  @Output() onCancel = new EventEmitter<T>();
   @ViewChild("content", { read: ViewContainerRef }) private contentContainer!: ViewContainerRef;
   @ViewChild(NzModalComponent) modalRef!: NzModalComponent;
   public visible: boolean = false;
@@ -44,7 +47,7 @@ export class ConfigModalComponent<T, U, R> implements AfterViewInit, IConfigModa
   ) {
   }
   public ngAfterViewInit() {
-    const factory = this.factoryResolver.resolveComponentFactory(this.config.component);
+    const factory = this.factoryResolver.resolveComponentFactory(this.customComponent);
     this.customModal = this.contentContainer.createComponent(factory).instance;
     this.customModal.confirm = this.confirm;
     this.customModal.cancel = this.cancel;
@@ -73,12 +76,12 @@ export class ConfigModalComponent<T, U, R> implements AfterViewInit, IConfigModa
   public confirm = (data: ConfirmData<R>): void => {
     this.visible = false;
     this.cdr.detectChanges();
-    this.config.onConfirm(data)
+    this.onConfirm.emit(data);
   }
   public cancel = (): void => {
     this.visible = false;
     this.cdr.detectChanges();
-    this.config.onCancel();
+    this.onCancel.emit();
   }
 
 }
