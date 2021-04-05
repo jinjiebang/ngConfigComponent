@@ -42,15 +42,15 @@ export class ConfigModalComponent<T, U, R> implements AfterViewInit, IConfigModa
   @ViewChild(NzModalComponent) modalRef!: NzModalComponent;
   public visible: boolean = false;
   private customModal!: ICustomModal<T, U, R>;
+  private initData!: (data: T) => Promise<U>;
+  private onOpen!: (data: U, type: IModalType) => void;
+  private getConfirmData!: () => ConfirmData<R>;
   constructor(
     private factoryResolver: ComponentFactoryResolver,
     private cdr: ChangeDetectorRef,
   ) {
   }
-  private initData!: (data: T) => Promise<U>;
-  private onOpen!: (data: U, type: IModalType) => void;
-  private getConfirmData!: () => ConfirmData<R>;
-  ngAfterViewInit() {
+  public ngAfterViewInit() {
     const factory = this.factoryResolver.resolveComponentFactory(this.customComponent);
     this.customModal = this.contentContainer.createComponent(factory).instance;
     this.customModal.confirm = this.confirm;
