@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NzModalComponent } from 'ng-zorro-antd/modal';
 import { ConfirmData, IConfigModal, ICustomModal, IModalType } from 'src/app/components/config-modal/config-modal.component';
 
@@ -10,40 +10,49 @@ export type ConfigModal = IConfigModal<string, number, number>
   styleUrls: ['./custom-modal.component.scss']
 })
 export class CustomModalComponent implements Modal {
-  @Input() configModal!: ConfigModal;
-  public customFooter: boolean = false;
-  public okDisabled: boolean = true
-  public confirmData: ConfirmData<number> = {data:1,type:IModalType.ADD};
+  @Input() confirm!: (data: ConfirmData<number>) => void;
+  @Input() cancel!: () => void;
+  @Input() updateModalConfig!: () => void;
+  @Input() modalRef!: NzModalComponent
+  public customFooter: boolean = true;
+  public okDisabled: boolean = false;
+  public _confirmData: ConfirmData<number> = { data: 1, type: IModalType.ADD };
 
   constructor() { }
 
-  public initModal(configModal:ConfigModal, modalRef: NzModalComponent) {
-    this.configModal = configModal;
-    modalRef.nzOkDisabled = this.okDisabled;
-    modalRef.nzFooter = this.customFooter ? null : undefined;
-    this.configModal.updateModalConfig();
-
+  public initModal = () => {
+    this.modalRef.nzOkDisabled = this.okDisabled;
+    this.modalRef.nzFooter = this.customFooter ? null : undefined;
+    this.updateModalConfig();
+    return {
+      onOpen: this.onOpen,
+      initData: this.initData,
+      getConfirmData: this.getConfirmData
+    }
+  }
+  public getConfirmData = () => {
+    return this._confirmData;
   }
 
-  public initData(data: string): Promise<number> {
+  public initData = (data: string): Promise<number> => {
     return new Promise((resolve, reject) => {
       console.log('initData')
-      setTimeout(()=>{
+      setTimeout(() => {
         console.log('initData complete')
         resolve(0);
-      },200)
+      }, 200)
     })
   }
 
-  public onOpen(data: number, type: IModalType): void {
+  public onOpen = (data: number, type: IModalType): void => {
     console.log('onOpen', data, type);
   };
 
   public onConfirm() {
-    this.configModal.confirm(this.confirmData)
+    this.confirm(this._confirmData)
   }
   public onCancel() {
-    this.configModal.cancel();
+    this.cancel();
   }
 
 

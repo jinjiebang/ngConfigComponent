@@ -7,20 +7,22 @@ export enum IModalType {
 }
 export type ConfirmData<R> = { type: IModalType, data: R }
 export interface ICustomModal<T, U, R> {
-  onOpen: (data: U, type: IModalType) => void;
-  initData: (data: T) => Promise<U>;
-  initModal: (configModal: IConfigModal<T, U, R>, modalRef: NzModalComponent) => void;
-  confirmData: ConfirmData<R>;
-  configModal: IConfigModal<T, U, R>;
+  confirm: (data: ConfirmData<R>) => void;
+  cancel: () => void;
+  updateModalConfig: () => void;
+  modalRef: NzModalComponent;
+  initModal: (modalRef: NzModalComponent) =>
+    {
+      onOpen: (data: U, type: IModalType) => void,
+      initData: (data: T) => Promise<U>,
+      getConfirmData: () => ConfirmData<R>;
+    };
 }
 export interface IConfigModal<T, U, R> {
   customComponent: Type<ICustomModal<T, U, R>>;
   onConfirm: EventEmitter<ConfirmData<R>>;
   onCancel: EventEmitter<T>;
   openModal: (data: T, type: IModalType) => void;
-  confirm: (data: ConfirmData<R>) => void;
-  cancel: () => void;
-  updateModalConfig: () => void
 }
 export interface ICustomModalConifg {
   customFooter?: boolean;
@@ -38,31 +40,41 @@ export class ConfigModalComponent<T, U, R> implements AfterViewInit, IConfigModa
   @Output() onCancel = new EventEmitter<T>();
   @ViewChild("content", { read: ViewContainerRef }) private contentContainer!: ViewContainerRef;
   @ViewChild(NzModalComponent) modalRef!: NzModalComponent;
-  private customModal!: ICustomModal<T, U, R>;
   public visible: boolean = false;
+  private customModal!: ICustomModal<T, U, R>;
   constructor(
     private factoryResolver: ComponentFactoryResolver,
     private cdr: ChangeDetectorRef,
   ) {
   }
+  private initData!: (data: T) => Promise<U>;
+  private onOpen!: (data: U, type: IModalType) => void;
+  private getConfirmData!: () => ConfirmData<R>;
   ngAfterViewInit() {
     const factory = this.factoryResolver.resolveComponentFactory(this.customComponent);
     this.customModal = this.contentContainer.createComponent(factory).instance;
-    this.customModal.initModal(this, this.modalRef);
+    this.customModal.confirm = this.confirm;
+    this.customModal.cancel = this.cancel;
+    this.customModal.updateModalConfig = this.updateModalConfig;
+    this.customModal.modalRef = this.modalRef;
+    const { onOpen, initData, getConfirmData } = this.customModal.initModal(this.modalRef);
+    this.onOpen = onOpen;
+    this.initData = initData;
+    this.getConfirmData = getConfirmData;
   }
 
   public openModal(data: T, type: IModalType): void {
-    this.customModal.initData(data).then((newData: U) => {
+    this.initData(data).then((newData: U) => {
       this.visible = true;
       this.cdr.detectChanges();
-      this.customModal.onOpen(newData, type)
+      this.onOpen(newData, type)
     });
   }
-  public updateModalConfig() {
-    this.cdr.detectChanges();
-  }
   public onOK() {
-    this.confirm(this.customModal.confirmData);
+    this.confirm(this.getConfirmData());
+  }
+  public updateModalConfig = () => {
+    this.cdr.detectChanges();
   }
   public confirm = (data: ConfirmData<R>): void => {
     this.visible = false;
@@ -74,4 +86,5 @@ export class ConfigModalComponent<T, U, R> implements AfterViewInit, IConfigModa
     this.cdr.detectChanges();
     this.onCancel.emit();
   }
+
 }
