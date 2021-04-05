@@ -139,7 +139,7 @@ export class WelcomeComponent implements OnInit {
     controlType: 'control',
   }
   public customModalComponent = CustomModalComponent;
-  @ViewChild(ConfigModalComponent) configModal!: ConfigModalComponent<string,string,string>;
+  @ViewChild(ConfigModalComponent) configModal!: ConfigModalComponent<string,string,number>;
   constructor() { }
 
   ngOnInit() {
@@ -148,7 +148,7 @@ export class WelcomeComponent implements OnInit {
     this.configModal.openModal('iii',IModalType.ADD)
   }
 
-  public onConfirm(confirm: ConfirmData<string>) {
+  public onConfirm(confirm: ConfirmData<number>) {
     console.log('confirmData', confirm)
   }
   public onCancel() {

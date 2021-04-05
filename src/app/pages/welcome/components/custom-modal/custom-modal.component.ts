@@ -1,20 +1,22 @@
 import { Component, Input } from '@angular/core';
 import { ConfirmData, IConfigModal, ICustomModal, IModalType } from 'src/app/components/config-modal/config-modal.component';
 
+export type Modal = ICustomModal<string, number, number>
+export type ConfigModal = IConfigModal<string, number, number>
 @Component({
   selector: 'app-custom-modal',
   templateUrl: './custom-modal.component.html',
   styleUrls: ['./custom-modal.component.scss']
 })
-export class CustomModalComponent implements ICustomModal<string, number, string> {
-  @Input() configModal!: IConfigModal<string, number, string>;
+export class CustomModalComponent implements Modal {
+  @Input() configModal!: ConfigModal;
   public customFooter: boolean = false;
   public okDisabled: boolean = false;
-  public confirmData: ConfirmData<string> = {data:'ddd',type:IModalType.ADD};
+  public confirmData: ConfirmData<number> = {data:1,type:IModalType.ADD};
 
   constructor() { }
 
-  public initModal(configModal:IConfigModal<string,number,string>) {
+  public initModal(configModal:ConfigModal) {
     this.configModal = configModal;
     this.configModal.updateModalConfig({okDisabled:this.okDisabled,customFooter:this.customFooter})
   }
