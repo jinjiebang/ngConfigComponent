@@ -11,12 +11,10 @@ export interface ICustomModal<T, U, R> {
   cancel: () => void;
   updateModalConfig: () => void;
   modalRef: NzModalComponent;
-  initModal: (modalRef: NzModalComponent) =>
-    {
-      onOpen: (data: U, type: IModalType) => void,
-      initData: (data: T) => Promise<U>,
-      getConfirmData: () => ConfirmData<R>;
-    };
+  initData: (data: T) => Promise<U>;
+  onOpen: (data: U, type: IModalType) => void;
+  getConfirmData: () => ConfirmData<R>;
+  initModal: () => void;
 }
 export interface IConfigModal<T, U, R> {
   customComponent: Type<ICustomModal<T, U, R>>;
@@ -42,9 +40,6 @@ export class ConfigModalComponent<T, U, R> implements AfterViewInit, IConfigModa
   @ViewChild(NzModalComponent) modalRef!: NzModalComponent;
   public visible: boolean = false;
   private customModal!: ICustomModal<T, U, R>;
-  private initData!: (data: T) => Promise<U>;
-  private onOpen!: (data: U, type: IModalType) => void;
-  private getConfirmData!: () => ConfirmData<R>;
   constructor(
     private factoryResolver: ComponentFactoryResolver,
     private cdr: ChangeDetectorRef,
@@ -57,21 +52,18 @@ export class ConfigModalComponent<T, U, R> implements AfterViewInit, IConfigModa
     this.customModal.cancel = this.cancel;
     this.customModal.updateModalConfig = this.updateModalConfig;
     this.customModal.modalRef = this.modalRef;
-    const { onOpen, initData, getConfirmData } = this.customModal.initModal(this.modalRef);
-    this.onOpen = onOpen;
-    this.initData = initData;
-    this.getConfirmData = getConfirmData;
+    this.customModal.initModal();
   }
 
   public openModal(data: T, type: IModalType): void {
-    this.initData(data).then((newData: U) => {
+    this.customModal.initData(data).then((newData: U) => {
       this.visible = true;
       this.cdr.detectChanges();
-      this.onOpen(newData, type)
+      this.customModal.onOpen(newData, type)
     });
   }
   public onOK() {
-    this.confirm(this.getConfirmData());
+    this.confirm(this.customModal.getConfirmData());
   }
   public updateModalConfig = () => {
     this.cdr.detectChanges();

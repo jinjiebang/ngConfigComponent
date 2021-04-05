@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NzModalComponent } from 'ng-zorro-antd/modal';
 import { ConfirmData, IConfigModal, ICustomModal, IModalType } from 'src/app/components/config-modal/config-modal.component';
 
@@ -14,7 +14,7 @@ export class CustomModalComponent implements Modal {
   @Input() cancel!: () => void;
   @Input() updateModalConfig!: () => void;
   @Input() modalRef!: NzModalComponent
-  public customFooter: boolean = true;
+  public customFooter: boolean = false;
   public okDisabled: boolean = false;
   public _confirmData: ConfirmData<number> = { data: 1, type: IModalType.ADD };
 
@@ -24,11 +24,6 @@ export class CustomModalComponent implements Modal {
     this.modalRef.nzOkDisabled = this.okDisabled;
     this.modalRef.nzFooter = this.customFooter ? null : undefined;
     this.updateModalConfig();
-    return {
-      onOpen: this.onOpen,
-      initData: this.initData,
-      getConfirmData: this.getConfirmData
-    }
   }
   public getConfirmData = () => {
     return this._confirmData;
