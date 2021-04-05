@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { IControlConfig } from 'src/app/components/config-form/config-form-model';
+import { ConfigModalComponent, ConfirmData, IModalType } from 'src/app/components/config-modal/config-modal.component';
+import { CustomModalComponent } from './components/custom-modal/custom-modal.component';
 
 @Component({
   selector: 'app-welcome',
@@ -136,9 +138,21 @@ export class WelcomeComponent implements OnInit {
     validators: [Validators.required, Validators.min(2)],
     controlType: 'control',
   }
+  public customModalComponent = CustomModalComponent;
+  @ViewChild(ConfigModalComponent) configModal!: ConfigModalComponent<string,string,string>;
   constructor() { }
 
   ngOnInit() {
+  }
+  showModal(){
+    this.configModal.openModal('iii',IModalType.ADD)
+  }
+
+  public onConfirm(confirm: ConfirmData<string>) {
+    console.log('confirmData', confirm)
+  }
+  public onCancel() {
+
   }
 
 }
