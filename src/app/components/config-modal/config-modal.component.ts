@@ -11,6 +11,7 @@ export interface ICustomModal<T, U, R> {
   cancel: () => void;
   updateModalConfig: () => void;
   modalRef: NzModalComponent;
+  // need component implement method
   initData: (data: T) => Promise<U>;
   onOpen: (data: U, type: IModalType) => void;
   getConfirmData: () => ConfirmData<R>;
