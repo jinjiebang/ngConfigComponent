@@ -1,15 +1,21 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { IControlConfig } from 'src/app/components/config-form/config-form-model';
 import { ConfigModalComponent, ConfirmData, IModalType } from 'src/app/components/config-modal/config-modal.component';
+import { ITableColumn, ITableConfig, ITableProps } from 'src/app/components/config-table/config-table.component';
 import { CustomModalComponent } from './components/custom-modal/custom-modal.component';
 
+export interface ITableItem {
+  title: string;
+  content: string;
+}
 @Component({
   selector: 'app-welcome',
   templateUrl: './welcome.component.html',
-  styleUrls: ['./welcome.component.scss']
+  styleUrls: ['./welcome.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WelcomeComponent implements OnInit {
+export class WelcomeComponent implements OnInit, AfterViewInit {
   public formConfig: IControlConfig[] = [
     {
       label: '输入',
@@ -152,10 +158,97 @@ export class WelcomeComponent implements OnInit {
   }
   public customModalComponent = CustomModalComponent;
   @ViewChild(ConfigModalComponent) configModal!: ConfigModalComponent<string, number>;
+  public tableConfig!: ITableConfig<ITableItem>;
+  public tableData:ITableItem[] = [
+    {
+      title:'标题1',
+      content:'内容1'
+    },
+    {
+      title:'标题2',
+      content:'内容2',
+    },
+    {
+      title:'标题1',
+      content:'内容1'
+    },
+    {
+      title:'标题2',
+      content:'内容2',
+    },
+    {
+      title:'标题1',
+      content:'内容1'
+    },
+    {
+      title:'标题2',
+      content:'内容2',
+    },
+    {
+      title:'标题1',
+      content:'内容1'
+    },
+    {
+      title:'标题2',
+      content:'内容2',
+    },
+    {
+      title:'标题1',
+      content:'内容1'
+    },
+    {
+      title:'标题2',
+      content:'内容2',
+    },
+    {
+      title:'标题1',
+      content:'内容1'
+    },
+    {
+      title:'标题2',
+      content:'内容2',
+    },
+    {
+      title:'标题1',
+      content:'内容1'
+    },
+    {
+      title:'标题2',
+      content:'内容2',
+    },
+  ]
+  @ViewChild('columnTpl',{read:TemplateRef}) private columnTpl!:TemplateRef<any>;
   constructor() { }
+  ngAfterViewInit(): void {
+    const props:Partial<ITableProps> = {
+      nzScroll:{y:'200px',x:"200px"},
+      nzLoading: false,
+      nzPageSize: 2,
+      nzPageIndex: 1,
+      nzTotal: this.tableData.length,
+    }
+    this.tableConfig = {
+      props,
+      columns:[
+        {
+          label:'标题',
+          key: 'title',
+        },
+        {
+          label:'内容',
+          key: 'content',
+        }
+      ]
+    }
+    this.tableConfig.columns.forEach(item=>{
+      item.template = this.columnTpl;
+    });
+
+  }
 
   ngOnInit() {
   }
+
   showModal() {
     this.configModal.openModal('父组件数据', IModalType.ADD)
   }

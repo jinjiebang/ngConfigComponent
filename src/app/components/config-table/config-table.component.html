@@ -1,0 +1,31 @@
+<div>
+  <nz-table
+    #basicTable
+    [nzData]="data"
+    [nzScroll]="props.nzScroll"
+    [nzLoading]="props.nzLoading"
+    [nzPageIndex]="props.nzPageIndex"
+    [nzPageSize]="props.nzPageSize"
+    [nzTotal]="props.nzTotal"
+    [nzSize]="props.nzSize"
+    [nzFrontPagination]="props.nzFrontPagination"
+    [nzShowPagination]="props.nzShowPagination"
+    [nzShowSizeChanger]="props.nzShowSizeChanger"
+  >
+    <thead>
+      <tr>
+        <th *ngFor="let column of config.columns" [nzWidth]="column.width ? column.width : null">{{column.label}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td *ngFor="let column of config.columns">
+          <span *ngIf="!column.template">{{data[column.key]}}</span>
+          <ng-container *ngIf="column.template">
+            <ng-container *ngTemplateOutlet="column.template; context:{data:data,config:column}"></ng-container>
+          </ng-container>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
