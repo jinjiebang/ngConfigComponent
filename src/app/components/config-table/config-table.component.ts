@@ -42,7 +42,7 @@ export class ConfigTableComponent<T extends { [key: string]: any }> implements O
   @Input() tdTemplate: TemplateRef<IColumnContext<T>> | TemplateRef<IColumnContext<T>>[] | null = null;
   @ViewChild(NzTableComponent) tableRef!: NzTableComponent;
   public props: ITableProps = {
-    nzScroll:  {},
+    nzScroll: {},
     nzLoading: false,
     nzPageSize: 10,
     nzPageIndex: 1,
@@ -53,11 +53,17 @@ export class ConfigTableComponent<T extends { [key: string]: any }> implements O
     nzPaginationPosition: "bottom",
     nzShowSizeChanger: true,
   }
+  public tdTemplateList: Array<null | TemplateRef<IColumnContext<T>>> = [];
   private subscriptions: Subscription[] = [];
   constructor(private cdr: ChangeDetectorRef) { }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.config) {
       this.props = { ...this.props, ...this.config.props };
+    }
+    if (changes.tdTemplate) {
+      this.tdTemplateList = this.config.columns.map((_, index) => {
+        return this.getTdTemplate(index)
+      })
     }
   }
   ngOnDestroy(): void {

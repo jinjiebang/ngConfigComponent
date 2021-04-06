@@ -20,9 +20,9 @@
     <tbody>
       <tr *ngFor="let data of basicTable.data">
         <td *ngFor="let column of config.columns;let i=index;">
-          <span *ngIf="!getTdTemplate(i)">{{data[column.key]}}</span>
-          <ng-container *ngIf="getTdTemplate(i)">
-            <ng-container *ngTemplateOutlet="getTdTemplate(i); context:{data:data,config:column}"></ng-container>
+          <span *ngIf="!tdTemplateList[i]">{{data[column.key]}}</span>
+          <ng-container *ngIf="tdTemplateList[i]">
+            <ng-container *ngTemplateOutlet="tdTemplateList[i]; context:{data:data,config:column}"></ng-container>
           </ng-container>
         </td>
       </tr>
