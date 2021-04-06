@@ -13,7 +13,6 @@ export interface ITableProps {
   nzFrontPagination: boolean;
   nzShowPagination: boolean;
   nzLoading: boolean;
-  nzSize: NzTableSize;
   nzShowSizeChanger: boolean;
   nzHideOnSinglePage: boolean;
   [key: string]: any;
@@ -26,7 +25,6 @@ export interface ITableColumn<T> {
   label: string;
   key: string;
   width?: string;
-  template?: TemplateRef<IColumnContext<T>>
 }
 export interface ITableConfig<T> {
   props: Partial<ITableProps>;
@@ -41,9 +39,10 @@ export interface ITableConfig<T> {
 export class ConfigTableComponent<T extends { [key: string]: any }> implements OnChanges, AfterViewInit, OnDestroy {
   @Input() config!: ITableConfig<T>;
   @Input() data!: T[];
+  @Input() tdTemplate: TemplateRef<IColumnContext<T>> | TemplateRef<IColumnContext<T>>[] | null = null;
   @ViewChild(NzTableComponent) tableRef!: NzTableComponent;
   public props: ITableProps = {
-    nzScroll: { y: '200px', x: "200px" },
+    nzScroll:  {},
     nzLoading: false,
     nzPageSize: 10,
     nzPageIndex: 1,
@@ -53,7 +52,6 @@ export class ConfigTableComponent<T extends { [key: string]: any }> implements O
     nzHideOnSinglePage: false,
     nzPaginationPosition: "bottom",
     nzShowSizeChanger: true,
-    nzSize: 'default'
   }
   private subscriptions: Subscription[] = [];
   constructor(private cdr: ChangeDetectorRef) { }
@@ -69,6 +67,12 @@ export class ConfigTableComponent<T extends { [key: string]: any }> implements O
   ngAfterViewInit(): void {
     this.updateProps();
     this.cdr.detectChanges();
+  }
+  public getTdTemplate(index: number): TemplateRef<IColumnContext<T>> | null {
+    if (!Array.isArray(this.tdTemplate)) {
+      return this.tdTemplate;
+    }
+    return this.tdTemplate[index];
   }
   public updateProps(): void {
     if (!this.tableRef) return;

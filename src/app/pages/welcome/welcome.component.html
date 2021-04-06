@@ -1,7 +1,7 @@
 <div>
   <app-config-form [formConfig]="formConfig"></app-config-form>
   <button nz-button (click)="showModal()">打开弹窗</button>
-  <app-config-table style="height: 200px"[config]="tableConfig" [data]="tableData" *ngIf="tableConfig"></app-config-table>
+  <app-config-table style="width: 200px;" *ngIf="tableConfig" [config]="tableConfig" [data]="tableData" [tdTemplate]="columnTpl"></app-config-table>
   <app-config-modal (onCancel)="onCancel()" (onConfirm)="onConfirm($event)" [customComponent]="customModalComponent">
   </app-config-modal>
   <ng-template #columnTpl let-data='data' let-config="config">

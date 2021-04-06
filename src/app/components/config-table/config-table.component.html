@@ -1,5 +1,6 @@
 <div>
   <nz-table
+    *ngIf="config"
     #basicTable
     [nzData]="data"
     [nzScroll]="props.nzScroll"
@@ -7,7 +8,6 @@
     [nzPageIndex]="props.nzPageIndex"
     [nzPageSize]="props.nzPageSize"
     [nzTotal]="props.nzTotal"
-    [nzSize]="props.nzSize"
     [nzFrontPagination]="props.nzFrontPagination"
     [nzShowPagination]="props.nzShowPagination"
     [nzShowSizeChanger]="props.nzShowSizeChanger"
@@ -19,10 +19,10 @@
     </thead>
     <tbody>
       <tr *ngFor="let data of basicTable.data">
-        <td *ngFor="let column of config.columns">
-          <span *ngIf="!column.template">{{data[column.key]}}</span>
-          <ng-container *ngIf="column.template">
-            <ng-container *ngTemplateOutlet="column.template; context:{data:data,config:column}"></ng-container>
+        <td *ngFor="let column of config.columns;let i=index;">
+          <span *ngIf="!getTdTemplate(i)">{{data[column.key]}}</span>
+          <ng-container *ngIf="getTdTemplate(i)">
+            <ng-container *ngTemplateOutlet="getTdTemplate(i); context:{data:data,config:column}"></ng-container>
           </ng-container>
         </td>
       </tr>

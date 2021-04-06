@@ -217,18 +217,16 @@ export class WelcomeComponent implements OnInit, AfterViewInit {
       content:'内容2',
     },
   ]
-  @ViewChild('columnTpl',{read:TemplateRef}) private columnTpl!:TemplateRef<any>;
   constructor() { }
-  ngAfterViewInit(): void {
-    const props:Partial<ITableProps> = {
-      nzScroll:{y:'200px',x:"200px"},
-      nzLoading: false,
-      nzPageSize: 2,
-      nzPageIndex: 1,
-      nzTotal: this.tableData.length,
-    }
+  ngOnInit(): void {
     this.tableConfig = {
-      props,
+      props: {
+        nzScroll:{x:'50px', y:'200px'},
+        nzLoading: false,
+        nzPageSize: 7,
+        nzPageIndex: 1,
+        nzTotal: this.tableData.length,
+      },
       columns:[
         {
           label:'标题',
@@ -240,13 +238,8 @@ export class WelcomeComponent implements OnInit, AfterViewInit {
         }
       ]
     }
-    this.tableConfig.columns.forEach(item=>{
-      item.template = this.columnTpl;
-    });
-
   }
-
-  ngOnInit() {
+  ngAfterViewInit(): void {
   }
 
   showModal() {
