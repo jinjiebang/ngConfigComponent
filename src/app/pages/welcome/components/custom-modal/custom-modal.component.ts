@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { NzModalComponent } from 'ng-zorro-antd/modal';
 import { ConfirmData, IConfigModal, ICustomModal, IModalType } from 'src/app/components/config-modal/config-modal.component';
 
-export type Modal = ICustomModal<string, number, number>
-export type ConfigModal = IConfigModal<string, number, number>
+export type Modal = ICustomModal<string, number>
+export type ConfigModal = IConfigModal<string, number>
 @Component({
   selector: 'app-custom-modal',
   templateUrl: './custom-modal.component.html',

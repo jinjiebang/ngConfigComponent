@@ -151,7 +151,7 @@ export class WelcomeComponent implements OnInit {
     controlType: 'control',
   }
   public customModalComponent = CustomModalComponent;
-  @ViewChild(ConfigModalComponent) configModal!: ConfigModalComponent<string, string, number>;
+  @ViewChild(ConfigModalComponent) configModal!: ConfigModalComponent<string, number>;
   constructor() { }
 
   ngOnInit() {
